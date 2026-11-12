@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>История: Англия XVI–XVII вв.</title>
+<style>
+:root{--bg:#f3f1ec;--card:#fff;--ink:#1d2433;--mute:#5d6678;--line:#d6d9e0;--acc:#7a1f2b;--acc2:#1f3a6e;--ok:#1f7a45;--bad:#b3261e}
+@media (prefers-color-scheme:dark){:root{--bg:#14171f;--card:#1e222d;--ink:#e8eaf0;--mute:#9aa3b5;--line:#343a4a;--acc:#e08a96;--acc2:#8fb0ee;--ok:#5cc58a;--bad:#f2837c}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.55 Georgia,"Times New Roman",serif}
+header{padding:22px 16px 8px;max-width:760px;margin:auto}
+h1{font-size:1.6rem;margin:0 0 4px}
+header p{margin:0;color:var(--mute);font-size:.95rem}
+nav{display:flex;gap:6px;max-width:760px;margin:12px auto;padding:0 16px;overflow-x:auto}
+nav button{flex:1;white-space:nowrap;padding:10px 14px;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:8px;font:inherit;font-size:.95rem;cursor:pointer}
+nav button[aria-selected=true]{background:var(--acc2);color:#fff;border-color:var(--acc2)}
+main{max-width:760px;margin:auto;padding:0 16px 60px}
+section{display:none}section.on{display:block}
+*{-webkit-tap-highlight-color:transparent}
+button:focus{outline:none}
+button:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.btn.alt:active,.opts button:active,nav button:active{background:color-mix(in srgb,var(--acc) 16%,var(--card));border-color:var(--acc);color:var(--ink)}
+.btn:not(.alt):active{filter:brightness(.85)}
+.card[tabindex]:active{background:color-mix(in srgb,var(--acc) 10%,var(--card))}
+.card[tabindex]:focus{outline:none}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin:10px 0}
+.card h3{margin:0 0 4px;font-size:1.1rem;color:var(--acc)}
+.card p{margin:0}
+.hide{display:none}
+.tl{border-left:3px solid var(--acc2);margin:14px 0 0 6px;padding-left:16px}
+.tl div{margin:0 0 12px;position:relative}
+.tl div:before{content:"";position:absolute;left:-23px;top:8px;width:11px;height:11px;border-radius:50%;background:var(--acc)}
+.tl b{color:var(--acc2)}
+.tl i{color:var(--mute)}
+.btn{padding:10px 16px;border:0;border-radius:8px;background:var(--acc2);color:#fff;font:inherit;cursor:pointer;margin:4px 6px 4px 0}
+.btn.alt{background:var(--card);color:var(--ink);border:1px solid var(--line)}
+.q{font-size:1.1rem;margin:10px 0}
+.opts button{display:block;width:100%;text-align:left;margin:6px 0;padding:11px 14px;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:8px;font:inherit;cursor:pointer}
+.opts button.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 18%,var(--card))}
+.opts button.no{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 18%,var(--card))}
+input[type=text]{width:100%;padding:11px;font:inherit;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--ink)}
+.fb{margin:8px 0;font-weight:bold}.fb.ok{color:var(--ok)}.fb.no{color:var(--bad)}
+.score{color:var(--mute);font-size:.95rem}
+.note{color:var(--mute);font-size:.9rem;margin-top:12px}
+</style>
+</head>
+<body>
+<header>
+<h1>Англия в XVI–XVII вв.</h1>
+<p>Параграфы 11–12. Подготовка к контрольной и историческому диктанту</p>
+</header>
+<nav role="tablist">
+<button role="tab" aria-selected="true" data-t="terms">Термины</button>
+<button role="tab" aria-selected="false" data-t="dates">Даты</button>
+<button role="tab" aria-selected="false" data-t="quiz">Тест</button>
+<button role="tab" aria-selected="false" data-t="dict">Диктант</button>
+</nav>
+<main>
+
+<section id="terms" class="on">
+<p class="score">Нажми на карточку, чтобы увидеть определение. Попробуй сначала вспомнить сам.</p>
+<div id="termList"></div>
+<button class="btn alt" id="showAll">Показать все</button>
+<button class="btn alt" id="hideAll">Скрыть все</button>
+</section>
+
+<section id="dates">
+<div class="tl" id="tl"></div>
+<p class="note">Жирным выделены даты из задания. Остальные тоже есть в параграфах и могут встретиться в контрольной.</p>
+</section>
+
+<section id="quiz">
+<div class="card">
+<div class="score" id="qScore"></div>
+<div class="q" id="qText"></div>
+<div class="opts" id="qOpts"></div>
+<div class="fb" id="qFb"></div>
+<button class="btn hide" id="qNext">Дальше</button>
+</div>
+</section>
+
+<section id="dict">
+<div class="card">
+<div class="score" id="dScore"></div>
+<div class="q" id="dText"></div>
+<input type="text" id="dIn" placeholder="Введи термин или год" autocomplete="off" autocapitalize="off">
+<div class="fb" id="dFb"></div>
+<button class="btn" id="dCheck">Проверить</button>
+<button class="btn alt" id="dSkip">Пропустить</button>
+</div>
+<p class="note">Регистр, кавычки и «ё» не важны. Для дат вводи только год (у периодов — начальный).</p>
+</section>
+
+</main>
+<script>
+// Термины: [название, определение]
+var TERMS=[
+["Огораживания","Захват дворянами общинных земель и превращение их в частную собственность: участки огораживали изгородями или рвами и сдавали в аренду или отдавали под пастбища для овец. Крестьяне теряли землю и становились бродягами или наёмными рабочими."],
+["Джентри","Новое дворянство (от англ. gentle — благородный): нетитулованное среднее и мелкое дворянство. Вело хозяйство по-новому, создавало мануфактуры, вкладывало деньги в торговлю, давало детям хорошее образование и требовало у короля и аристократов делиться властью. Из джентри избирали всё больше депутатов парламента."],
+["Пресвитериане","Часть пуритан, находившаяся под сильным влиянием учения Кальвина. Хотели, чтобы церковью управляли выборные главы общин (пресвитеры), и добивались упразднения власти епископов."],
+["Индепенденты","(«независимые») Пуритане, считавшие, что свобода возможна лишь при полной независимости каждой общины. Во время революции стремились к продолжению войны, в армии преобладали они. Среди них был Кромвель."],
+["Кавалеры (роялисты)","Сторонники королевской власти во время революции. Слово от англ. cavalier — рыцарь, дворянин. Так их называли сторонники парламента; прозвище подчёркивало дворянский характер королевской армии, где главную роль играла кавалерия."],
+["Круглоголовые","Прозвище сторонников парламента (в основном пуритан) во время революции. В этих параграфах слово не объясняется, определение взято из общих знаний: так звали их из-за коротких стрижек."],
+["Протекторат Кромвеля","Режим 1653–1658 гг., сменивший республику. Кромвель принял титул лорда-протектора (защитника республики) и практически получил королевские полномочия, но от короны отказался."],
+["«Великая ремонстрация»","Документ, принятый парламентом в 1641 г. (в период Долгого парламента). По общим знаниям: перечень претензий к королю и недостатков управления. В учебнике на этих страницах назван только год."],
+["«Славная революция»","Переворот 1688 г.: Вильгельм III Оранский почти без сопротивления занял Англию, Яков II бежал. Революция была бескровной и поддержанной большинством. Итог: Билль о правах (1689), Акт о веротерпимости (1689)."],
+["Первая английская революция","1640–1660 гг. Началась с деятельности Долгого парламента. Включала гражданские войны, казнь Карла I (1649), республику, протекторат Кромвеля и закончилась реставрацией Стюартов (1660). Английские историки часто называют её гражданской войной."],
+["Акт о супрематии","1534 г. Объявил церковь независимой от Рима (англиканской), а короля её главой. Усилил королевскую власть и дал ей идеологическую опору."],
+["Пуритане","Те, кто выступал за очищение церкви от остатков католицизма (от лат. purus — чистый). Делились на пресвитериан и индепендентов."],
+["Тори и виги","Прообразы будущих партий после Реставрации. Тори («партия двора») считали короля обладающим верховной властью, помазанником Божьим. Виги считали, что власть держится на договоре между королём и парламентом, и хотели поставить монархию под контроль."],
+["Билль о правах","1689 г. Исключил католиков из престолонаследия, запретил королю принимать законы без парламента, гарантировал членам парламента свободу слова, подчинил королевские прерогативы обычному праву."],
+["Левеллеры","(«уравнители») Группировка среди индепендентов (около 1647 г.), выступавшая за республику и веротерпимость, добивавшаяся политического равенства."]
+];
+// События: [год, текст, важная для задания?]
+var DATES=[
+[1485,"В Англии утвердилась династия Тюдоров (после Войны Алой и Белой розы)",0],
+[1534,"Акт о супрематии, создание англиканской церкви",0],
+[1558,"Начало правления Елизаветы I (до 1603)",0],
+[1588,"Гибель «Непобедимой армады»",0],
+[1603,"Воцарение династии Стюартов (Яков I, до 1625)",0],
+[1625,"Начало правления Карла I (до 1649)",0],
+[1629,"Карл I распустил парламент и 11 лет правил без него",0],
+[1640,"Начало Долгого парламента и Английской революции",1],
+[1640,"Начало Первой английской революции (1640–1660)",1],
+[1641,"«Великая ремонстрация»",1],
+[1642,"Карл I начал войну с парламентом",0],
+[1649,"Казнь Карла I, провозглашение республики",0],
+[1653,"Протекторат Кромвеля (1653–1658)",1],
+[1660,"Реставрация Стюартов, правление Карла II (до 1685)",0],
+[1685,"Яков II на троне (до 1688)",0],
+[1688,"«Славная революция», Вильгельм III Оранский",1],
+[1689,"Билль о правах и Акт о веротерпимости",0],
+[1701,"Акт об устроении",0]
+];
+// Диктант и тест: вопрос про даты (год как ответ)
+var DQ=[
+["Первая английская революция (начало)",1640],
+["Принятие «Великой ремонстрации»",1641],
+["Начало протектората Кромвеля",1653],
+["«Славная революция»",1688],
+["Казнь Карла I и провозглашение республики",1649],
+["Реставрация Стюартов",1660],
+["Акт о супрематии",1534],
+["Воцарение династии Стюартов",1603],
+["Билль о правах",1689],
+["Гибель «Непобедимой армады»",1588]
+];
+function $(i){return document.getElementById(i)}
+function rnd(a){return a[Math.floor(Math.random()*a.length)]}
+function shuf(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t}return a}
+function norm(s){return s.toLowerCase().replace(/ё/g,"е").replace(/[«»"“”().,]/g,"").replace(/\s+/g," ").trim()}
+// Вкладки
+document.querySelectorAll("nav button").forEach(function(b){b.onclick=function(){
+document.querySelectorAll("nav button").forEach(function(x){x.setAttribute("aria-selected",x===b)});
+document.querySelectorAll("section").forEach(function(s){s.classList.toggle("on",s.id===b.dataset.t)})}});
+// Термины
+var tl=$("termList");
+TERMS.forEach(function(t){
+var d=document.createElement("div");d.className="card";
+d.innerHTML="<h3></h3><p class='hide'></p>";
+d.children[0].textContent=t[0];d.children[1].textContent=t[1];
+d.tabIndex=0;d.style.cursor="pointer";
+var f=function(){d.children[1].classList.toggle("hide")};
+d.onclick=f;d.onkeydown=function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();f()}};
+tl.appendChild(d)});
+$("showAll").onclick=function(){tl.querySelectorAll("p").forEach(function(p){p.classList.remove("hide")})};
+$("hideAll").onclick=function(){tl.querySelectorAll("p").forEach(function(p){p.classList.add("hide")})};
+// Даты
+var seen={};
+DATES.forEach(function(d){
+var k=d[0]+d[1];if(seen[k])return;seen[k]=1;
+if(d[0]===1640&&d[1].indexOf("Начало Долгого")===0)return;
+var e=document.createElement("div");
+e.innerHTML=(d[2]?"<b></b>":"<i></i>")+" — <span></span>";
+e.children[0].textContent=d[0];e.children[1].textContent=d[1];
+$("tl").appendChild(e)});
+// Тест: 2 вида вопросов
+var qn=0,qok=0,qdone=false;
+function newQ(){
+qdone=false;$("qFb").textContent="";$("qFb").className="fb";$("qNext").classList.add("hide");
+var o=$("qOpts");o.innerHTML="";
+var correct,opts,text;
+if(Math.random()<.5){
+var t=rnd(TERMS);correct=t[0];text="Что это? "+t[1];
+if(t[0]==="Круглоголовые"||t[0]==="«Великая ремонстрация»"){return newQ()}
+opts=[correct];
+shuf(TERMS).forEach(function(x){if(opts.length<4&&x[0]!==correct)opts.push(x[0])});
+}else{
+var q=rnd(DQ);correct=String(q[1]);text="В каком году: "+q[0]+"?";
+var s={};s[correct]=1;opts=[correct];
+shuf(DQ).forEach(function(x){var y=String(x[1]);if(opts.length<4&&!s[y]){s[y]=1;opts.push(y)}});
+}
+$("qText").textContent=text;
+shuf(opts).forEach(function(v){
+var b=document.createElement("button");b.textContent=v;
+b.onclick=function(){
+if(qdone)return;qdone=true;qn++;
+if(v===correct){qok++;b.classList.add("ok");$("qFb").textContent="Верно";$("qFb").className="fb ok"}
+else{b.classList.add("no");$("qFb").textContent="Неверно. Правильно: "+correct;$("qFb").className="fb no";
+o.querySelectorAll("button").forEach(function(x){if(x.textContent===correct)x.classList.add("ok")})}
+$("qScore").textContent="Верно: "+qok+" из "+qn;
+$("qNext").classList.remove("hide")};
+o.appendChild(b)});
+$("qScore").textContent=qn?"Верно: "+qok+" из "+qn:"Выбери правильный ответ";
+}
+$("qNext").onclick=newQ;newQ();
+// Диктант
+var cur=null,dn=0,dok=0;
+function newD(){
+$("dFb").textContent="";$("dFb").className="fb";$("dIn").value="";
+var t=rnd(TERMS.filter(function(x){return x[0]!=="Круглоголовые"&&x[0]!=="«Великая ремонстрация»"}));
+if(Math.random()<.5){
+var q=rnd(DQ);cur={a:String(q[1]),show:q[1]};$("dText").textContent="Год: "+q[0]+"?";
+}else{
+var name=t[0].replace(/\s*\(.*\)/,"");
+cur={a:norm(name),show:t[0],alt:norm(t[0])};
+$("dText").textContent="Какой термин? "+t[1];
+}
+$("dIn").focus();
+}
+function check(){
+if(!cur)return;var v=norm($("dIn").value);if(!v)return;
+dn++;
+if(v===cur.a||v===cur.alt){dok++;$("dFb").textContent="Верно";$("dFb").className="fb ok"}
+else{$("dFb").textContent="Неверно. Правильно: "+cur.show;$("dFb").className="fb no"}
+$("dScore").textContent="Верно: "+dok+" из "+dn;
+cur=null;setTimeout(newD,1500);
+}
+$("dCheck").onclick=check;
+$("dIn").onkeydown=function(e){if(e.key==="Enter")check()};
+$("dSkip").onclick=function(){if(cur){$("dFb").textContent="Ответ: "+cur.show;$("dFb").className="fb no";cur=null;setTimeout(newD,1500)}};
+$("dScore").textContent="Впиши ответ";newD();
+</script>
+</body>
+</html>
